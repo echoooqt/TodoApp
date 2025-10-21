@@ -1,0 +1,68 @@
+﻿@model IEnumerable<TodoApp.Models.TodoItem>
+@{
+    ViewData["Title"] = "My To-Do List";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-check2-square"></i> My To-Do List
+        </h2>
+        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus"></i> Add Task</a>
+    </div>
+
+    <div class="mb-3">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm me-1">All</a>
+        <a asp-action="Filter" asp-route-status="completed" class="btn btn-outline-success btn-sm me-1">Completed</a>
+        <a asp-action="Filter" asp-route-status="pending" class="btn btn-outline-danger btn-sm">Pending</a>
+    </div>
+
+    <form method="get" asp-action="Search" class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="query" class="form-control" placeholder="Search tasks..." />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title fw-semibold">@item.Title</h5>
+
+                        @if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            <p class="card-text text-muted small mb-2">@item.Description</p>
+                        }
+
+                        <p class="text-secondary small mb-3">Created: @item.CreatedDate.ToShortDateString()</p>
+
+                        @if (item.IsComplete)
+                        {
+                            <span class="badge bg-success mb-3">Completed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark mb-3">Pending</span>
+                        }
+
+                        <div class="d-flex justify-content-start gap-2">
+                            <a asp-action="ToggleComplete" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
+                                <i class="bi bi-arrow-repeat"></i> Toggle
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
